@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <span class="badge">Free &middot; No sign-up required</span>
+        <h1>Shorten your links</h1>
+        <p class="subtitle">Paste a long URL below and get a short link or QR code instantly.</p>
+
+        <form method="POST" action="/">
+            <input
+                type="text"
+                name="url"
+                placeholder="https://example.com/your-very-long-url"
+                required
+            >
+
+            <div class="option-group">
+                <label class="option">
+                    <input type="radio" name="output_type" value="short" {% if output_type != 'qr' %}checked{% endif %}>
+                    <span>Short Link</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="output_type" value="qr" {% if output_type == 'qr' %}checked{% endif %}>
+                    <span>QR Code</span>
+                </label>
+            </div>
+
+            <button type="submit">Generate</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if short_url and not qr_image %}
+            <div class="result">
+                <p class="result-label">Your short link</p>
+                <a href="{{ short_url }}" target="_blank">{{ short_url }}</a>
+
+                <div class="action-row">
+                    <a class="action-btn" href="https://wa.me/?text={{ encoded_url }}" target="_blank">Share on WhatsApp</a>
+                    <a class="action-btn" href="mailto:?subject=Check this link&body={{ encoded_url }}">Share via Email</a>
+                </div>
+                <a class="remove-link" href="/">Remove &amp; start over</a>
+            </div>
+        {% endif %}
+
+        {% if qr_image %}
+            <div class="result">
+                <p class="result-label">Your QR code</p>
+                <img class="qr-image" src="data:image/png;base64,{{ qr_image }}" alt="QR code for {{ short_url }}">
+                <a href="{{ short_url }}" target="_blank">{{ short_url }}</a>
+
+                <div class="action-row">
+                    <a class="action-btn" href="data:image/png;base64,{{ qr_image }}" download="qrcode.png">Download QR</a>
+                    <a class="action-btn" href="https://wa.me/?text={{ encoded_url }}" target="_blank">Share on WhatsApp</a>
+                    <a class="action-btn" href="mailto:?subject=Check this link&body={{ encoded_url }}">Share via Email</a>
+                </div>
+                <a class="remove-link" href="/">Remove &amp; start over</a>
+            </div>
+        {% endif %}
+
+        <div class="footer-note">Built with Flask &amp; SQLite</div>
+    </div>
+</body>
+</html>

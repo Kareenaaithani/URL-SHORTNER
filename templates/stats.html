@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Statistics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Link Statistics</h1>
+        <table>
+            <tr><th>Short Code</th><td>{{ url.short_code }}</td></tr>
+            <tr><th>Original URL</th><td><a href="{{ url.original_url }}">{{ url.original_url }}</a></td></tr>
+            <tr><th>Total Clicks</th><td>{{ url.clicks }}</td></tr>
+        </table>
+        <p class="back-link"><a href="/">&larr; Back to home</a></p>
+    </div>
+</body>
+</html>
