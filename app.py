@@ -9,12 +9,12 @@ import random
 import io
 import base64
 import qrcode
+import os
 from flask import Flask, request, redirect, render_template, jsonify, abort, g
 from urllib.parse import quote
 
 app = Flask(__name__)
-
-DATABASE = "urls.db"
+DATABASE = "/tmp/urls.db" if os.environ.get("VERCEL") else "urls.db"
 SHORT_CODE_LENGTH = 6
 ALPHABET = string.ascii_letters + string.digits  # a-z, A-Z, 0-9
 
@@ -199,6 +199,7 @@ def api_shorten():
 def not_found(e):
     return render_template("404.html"), 404
 
+init_db()
 
 if __name__ == "__main__":
     init_db()
